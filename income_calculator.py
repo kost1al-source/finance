@@ -114,7 +114,7 @@ class IncomeCalculator(tk.Tk):
 
         mark = tk.Canvas(header, width=48, height=48, bg=TEAL, highlightthickness=0)
         mark.grid(row=0, column=0, rowspan=2, padx=(0, 13))
-        mark.create_text(24, 24, text="₽", fill="white", font=("Segoe UI", 22, "bold"))
+        mark.create_text(24, 24, text="КС", fill="white", font=("Segoe UI", 12, "bold"))
         ttk.Label(header, text="РАБОЧИЙ РАСЧЁТ", style="Eyebrow.TLabel").grid(row=0, column=1, sticky="sw")
         ttk.Label(header, text="Недельные доходы по авто", style="Title.TLabel").grid(row=1, column=1, sticky="nw")
         status = tk.Label(header, text="●  Расчёт обновляется сразу", bg="#ffffff", fg=TEAL_DARK, padx=12, pady=7, font=("Segoe UI", 9, "bold"))
