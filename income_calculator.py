@@ -66,10 +66,10 @@ class IncomeCalculator(tk.Tk):
             "fuel": tk.StringVar(value="0"),
             "tax": tk.StringVar(value="0"),
             "net": tk.StringVar(value="0"),
-            "gross": tk.StringVar(value="0 КС"),
-            "fuel_summary": tk.StringVar(value="0 КС"),
-            "tax_summary": tk.StringVar(value="0 КС"),
-            "rent_summary": tk.StringVar(value="0 КС"),
+            "gross": tk.StringVar(value="0 CZK"),
+            "fuel_summary": tk.StringVar(value="0 CZK"),
+            "tax_summary": tk.StringVar(value="0 CZK"),
+            "rent_summary": tk.StringVar(value="0 CZK"),
             "margin": tk.StringVar(value="0%"),
         }
         self.entries = []
@@ -114,7 +114,7 @@ class IncomeCalculator(tk.Tk):
 
         mark = tk.Canvas(header, width=48, height=48, bg=TEAL, highlightthickness=0)
         mark.grid(row=0, column=0, rowspan=2, padx=(0, 13))
-        mark.create_text(24, 24, text="КС", fill="white", font=("Segoe UI", 12, "bold"))
+        mark.create_text(24, 24, text="CZK", fill="white", font=("Segoe UI", 9, "bold"))
         ttk.Label(header, text="РАБОЧИЙ РАСЧЁТ", style="Eyebrow.TLabel").grid(row=0, column=1, sticky="sw")
         ttk.Label(header, text="Недельные доходы по авто", style="Title.TLabel").grid(row=1, column=1, sticky="nw")
         status = tk.Label(header, text="●  Расчёт обновляется сразу", bg="#ffffff", fg=TEAL_DARK, padx=12, pady=7, font=("Segoe UI", 9, "bold"))
@@ -136,7 +136,7 @@ class IncomeCalculator(tk.Tk):
         right.columnconfigure(0, weight=1)
         self.build_summary_panel(right)
 
-        ttk.Label(root, text="Введите значения за одну неделю в КС. Расчётные поля нельзя изменить вручную.", style="Foot.TLabel").grid(row=2, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(root, text="Введите значения за одну неделю в CZK. Расчётные поля нельзя изменить вручную.", style="Foot.TLabel").grid(row=2, column=0, sticky="w", pady=(12, 0))
 
     def build_input_panel(self, parent):
         top = ttk.Frame(parent, style="Panel.TFrame", padding=(22, 20, 22, 14))
@@ -151,12 +151,12 @@ class IncomeCalculator(tk.Tk):
         fields.grid(row=1, column=0, sticky="ew")
         fields.columnconfigure(0, weight=1)
         field_data = [
-            ("gross", "Грубый доход", "Все поступления за неделю", "КС"),
+            ("gross", "Грубый доход", "Все поступления за неделю", "CZK"),
             ("distance", "Пробег", "Расстояние за неделю", "км"),
             ("consumption", "Средний расход", "Расход топлива автомобиля", "л/100 км"),
-            ("fuel_price", "Цена топлива", "Стоимость одного литра", "КС/литр"),
-            ("commission", "Комиссия", "Комиссия сервиса за неделю", "КС"),
-            ("rent", "Пронайм", "Аренда автомобиля за неделю", "КС"),
+            ("fuel_price", "Цена топлива", "Стоимость одного литра", "CZK/литр"),
+            ("commission", "Комиссия", "Комиссия сервиса за неделю", "CZK"),
+            ("rent", "Пронайм", "Аренда автомобиля за неделю", "CZK"),
         ]
         for row, data in enumerate(field_data):
             self.add_input_row(fields, row, *data)
@@ -170,9 +170,9 @@ class IncomeCalculator(tk.Tk):
         calc.grid(row=3, column=0, sticky="ew", padx=15, pady=(0, 18))
         calc.columnconfigure(0, weight=1)
         for row, data in enumerate([
-            ("Стоимость топлива", "Пробег × расход ÷ 100 × цена", "fuel", "КС"),
-            ("DPН", "Комиссия × 21%", "tax", "КС"),
-            ("Чистый доход", "Грубый доход − расходы", "net", "КС"),
+            ("Стоимость топлива", "Пробег × расход ÷ 100 × цена", "fuel", "CZK"),
+            ("DPН", "Комиссия × 21%", "tax", "CZK"),
+            ("Чистый доход", "Грубый доход − расходы", "net", "CZK"),
         ]):
             self.add_calc_row(calc, row, *data)
         formula = tk.Label(parent, text="Формула: чистый доход = грубый доход − (топливо + DPН + пронайм)", bg=ORANGE_SOFT, fg=ORANGE, anchor="w", padx=12, pady=8, font=("Segoe UI", 8))
@@ -218,7 +218,7 @@ class IncomeCalculator(tk.Tk):
         hero.grid(row=2, column=0, sticky="ew")
         tk.Label(hero, text="Чистый доход", bg="#164b4c", fg="#b7ddd7", anchor="w", font=("Segoe UI", 10)).pack(fill="x", padx=18, pady=(17, 0))
         tk.Label(hero, textvariable=self.result_vars["net"], bg="#164b4c", fg="white", anchor="w", font=("Segoe UI", 34, "bold")).pack(fill="x", padx=18, pady=(2, 0))
-        tk.Label(hero, text="КС после основных расходов", bg="#164b4c", fg="#b7ddd7", anchor="w", font=("Segoe UI", 9)).pack(fill="x", padx=18, pady=(0, 17))
+        tk.Label(hero, text="CZK после основных расходов", bg="#164b4c", fg="#b7ddd7", anchor="w", font=("Segoe UI", 9)).pack(fill="x", padx=18, pady=(0, 17))
 
         self.add_summary_line(inner, 3, "Грубый доход", "gross")
         self.add_summary_line(inner, 4, "Топливо", "fuel_summary")
@@ -274,10 +274,10 @@ class IncomeCalculator(tk.Tk):
         self.result_vars["fuel"].set(format_number(fuel))
         self.result_vars["tax"].set(format_number(tax))
         self.result_vars["net"].set(format_number(net, 0))
-        self.result_vars["gross"].set(f"{format_number(gross)} КС")
-        self.result_vars["fuel_summary"].set(f"{format_number(fuel)} КС")
-        self.result_vars["tax_summary"].set(f"{format_number(tax)} КС")
-        self.result_vars["rent_summary"].set(f"{format_number(rent)} КС")
+        self.result_vars["gross"].set(f"{format_number(gross)} CZK")
+        self.result_vars["fuel_summary"].set(f"{format_number(fuel)} CZK")
+        self.result_vars["tax_summary"].set(f"{format_number(tax)} CZK")
+        self.result_vars["rent_summary"].set(f"{format_number(rent)} CZK")
         self.result_vars["margin"].set(f"{format_number(margin)}%")
 
 

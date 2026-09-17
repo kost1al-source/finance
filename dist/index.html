@@ -357,7 +357,7 @@
               <label class="field">
                 <span class="field-copy"><span class="field-title">Грубый доход</span><span class="field-note">Все поступления за неделю</span></span>
                 <span class="input-wrap"><input id="gross" type="number" inputmode="decimal" min="0" step="100" value="28000" aria-label="Грубый доход" /></span>
-                <span class="unit">КС</span>
+                <span class="unit">CZK</span>
               </label>
               <label class="field">
                 <span class="field-copy"><span class="field-title">Пробег</span><span class="field-note">Расстояние за неделю</span></span>
@@ -372,17 +372,17 @@
               <label class="field">
                 <span class="field-copy"><span class="field-title">Цена топлива</span><span class="field-note">Стоимость одного литра</span></span>
                 <span class="input-wrap"><input id="fuelPrice" type="number" inputmode="decimal" min="0" step="0.1" value="38.5" aria-label="Цена топлива" /></span>
-                <span class="unit">КС/литр</span>
+                <span class="unit">CZK/литр</span>
               </label>
               <label class="field">
                 <span class="field-copy"><span class="field-title">Комиссия</span><span class="field-note">Комиссия сервиса за неделю</span></span>
                 <span class="input-wrap"><input id="commission" type="number" inputmode="decimal" min="0" step="100" value="4200" aria-label="Комиссия" /></span>
-                <span class="unit">КС</span>
+                <span class="unit">CZK</span>
               </label>
               <label class="field">
                 <span class="field-copy"><span class="field-title">Пронайм</span><span class="field-note">Аренда автомобиля за неделю</span></span>
                 <span class="input-wrap"><input id="rent" type="number" inputmode="decimal" min="0" step="100" value="1800" aria-label="Пронайм" /></span>
-                <span class="unit">КС</span>
+                <span class="unit">CZK</span>
               </label>
             </div>
 
@@ -391,17 +391,17 @@
               <div class="calc-row">
                 <span class="field-copy"><span class="field-title">Стоимость топлива</span><span class="field-note">Пробег × расход ÷ 100 × цена</span></span>
                 <output class="calc-value" id="fuelCost">0</output>
-                <span class="unit">КС</span>
+                <span class="unit">CZK</span>
               </div>
               <div class="calc-row">
                 <span class="field-copy"><span class="field-title">DPН</span><span class="field-note">Комиссия × 21%</span></span>
                 <output class="calc-value" id="tax">0</output>
-                <span class="unit">КС</span>
+                <span class="unit">CZK</span>
               </div>
               <div class="calc-row">
                 <span class="field-copy"><span class="field-title">Чистый доход</span><span class="field-note">Грубый доход − расходы</span></span>
                 <output class="calc-value" id="netInline">0</output>
-                <span class="unit">КС</span>
+                <span class="unit">CZK</span>
               </div>
               <div class="formula"><strong>Формула:</strong> чистый доход = грубый доход − (топливо + DPН + пронайм)</div>
             </div>
@@ -413,20 +413,20 @@
             <div class="net-box">
               <div class="net-label">Чистый доход</div>
               <div class="net-amount" id="netAmount">0</div>
-              <div class="net-unit">КС после основных расходов</div>
+              <div class="net-unit">CZK после основных расходов</div>
             </div>
             <ul class="summary-list">
-              <li><span>Грубый доход</span><strong id="grossSummary">0 КС</strong></li>
-              <li><span>Топливо</span><strong id="fuelSummary">0 КС</strong></li>
-              <li><span>DPН</span><strong id="taxSummary">0 КС</strong></li>
-              <li><span>Пронайм</span><strong id="rentSummary">0 КС</strong></li>
+              <li><span>Грубый доход</span><strong id="grossSummary">0 CZK</strong></li>
+              <li><span>Топливо</span><strong id="fuelSummary">0 CZK</strong></li>
+              <li><span>DPН</span><strong id="taxSummary">0 CZK</strong></li>
+              <li><span>Пронайм</span><strong id="rentSummary">0 CZK</strong></li>
             </ul>
             <div class="summary-foot"><span>Доля чистого дохода</span><span class="margin" id="marginSummary">0%</span></div>
             <div class="tip"><span class="tip-icon">i</span><span>Измените любое поле слева, чтобы сразу увидеть новый результат.</span></div>
           </aside>
         </div>
 
-        <footer>Введите значения за одну неделю в КС. Поля с расчётом защищены от ручного редактирования.</footer>
+        <footer>Введите значения за одну неделю в CZK. Поля с расчётом защищены от ручного редактирования.</footer>
       </div>
     </main>
 
@@ -452,10 +452,10 @@
         document.getElementById('tax').textContent = money(tax);
         document.getElementById('netInline').textContent = money(net);
         document.getElementById('netAmount').textContent = whole(net);
-        document.getElementById('grossSummary').textContent = `${money(gross)} КС`;
-        document.getElementById('fuelSummary').textContent = `${money(fuelCost)} КС`;
-        document.getElementById('taxSummary').textContent = `${money(tax)} КС`;
-        document.getElementById('rentSummary').textContent = `${money(rent)} КС`;
+        document.getElementById('grossSummary').textContent = `${money(gross)} CZK`;
+        document.getElementById('fuelSummary').textContent = `${money(fuelCost)} CZK`;
+        document.getElementById('taxSummary').textContent = `${money(tax)} CZK`;
+        document.getElementById('rentSummary').textContent = `${money(rent)} CZK`;
         document.getElementById('marginSummary').textContent = `${money(margin)}%`;
       }
 
