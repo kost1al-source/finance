@@ -1,0 +1,5 @@
+__pycache__/
+exe_build/
+exe_dist/
+*.spec
+*.tar.gz
