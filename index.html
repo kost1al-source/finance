@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f766e" />
+    <title>Расчёт недельных доходов по авто</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230f766e'/%3E%3Cpath d='M16 40h32M21 40l2.5-12h17L43 40M26 28l2-7h8l2 7M20 46h4M40 46h4' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --ink: #153238;
+        --muted: #6a7e80;
+        --line: #dbe8e6;
+        --surface: #ffffff;
+        --surface-soft: #f4f9f8;
+        --teal: #0f766e;
+        --teal-dark: #0b5d57;
+        --teal-soft: #e4f4f1;
+        --orange: #e38543;
+        --orange-soft: #fff2e8;
+        --shadow: 0 24px 60px rgba(27, 69, 69, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background: #eaf3f1;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      button, input { font: inherit; }
+
+      .app-shell {
+        min-height: 100vh;
+        padding: 32px 22px 48px;
+        background:
+          radial-gradient(circle at 10% 0%, rgba(255,255,255,.78), transparent 32%),
+          linear-gradient(140deg, #edf7f5 0%, #e6f0ee 58%, #f4eee6 100%);
+      }
+
+      .app {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 28px;
+        margin-bottom: 28px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        color: white;
+        background: var(--teal);
+        box-shadow: 0 10px 20px rgba(15,118,110,.22);
+      }
+
+      .brand-mark svg { width: 27px; height: 27px; }
+
+      .eyebrow {
+        margin: 0 0 3px;
+        color: var(--teal);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      h1, h2, p { margin-top: 0; }
+      h1 {
+        margin-bottom: 0;
+        font-size: clamp(25px, 3vw, 36px);
+        letter-spacing: -.045em;
+        line-height: 1.1;
+      }
+
+      .week-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 13px;
+        color: var(--teal-dark);
+        background: rgba(255,255,255,.78);
+        border: 1px solid rgba(15,118,110,.14);
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .week-chip span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #38a169;
+        box-shadow: 0 0 0 4px rgba(56,161,105,.12);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(360px, .82fr);
+        gap: 22px;
+        align-items: start;
+      }
+
+      .panel {
+        overflow: hidden;
+        background: rgba(255,255,255,.86);
+        border: 1px solid rgba(198, 220, 216, .9);
+        border-radius: 25px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .panel-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 25px 26px 18px;
+      }
+
+      .panel-top h2 { margin-bottom: 5px; font-size: 20px; letter-spacing: -.025em; }
+      .panel-top p { margin-bottom: 0; color: var(--muted); font-size: 14px; }
+
+      .counter {
+        align-self: flex-start;
+        padding: 7px 10px;
+        color: var(--teal);
+        background: var(--teal-soft);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .03em;
+        white-space: nowrap;
+      }
+
+      .fields { padding: 0 14px 14px; }
+
+      .field {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 170px 76px;
+        gap: 12px;
+        align-items: center;
+        min-height: 75px;
+        padding: 11px 12px;
+        border-top: 1px solid var(--line);
+      }
+
+      .field-copy { min-width: 0; }
+      .field-title { margin-bottom: 3px; font-weight: 750; }
+      .field-note { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+      .input-wrap { position: relative; }
+      .input-wrap input {
+        width: 100%;
+        height: 46px;
+        padding: 0 13px;
+        color: var(--ink);
+        background: #fbfdfd;
+        border: 1px solid #cbdeda;
+        border-radius: 12px;
+        outline: none;
+        text-align: right;
+        font-size: 17px;
+        font-weight: 750;
+        transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      }
+
+      .input-wrap input:focus {
+        background: #fff;
+        border-color: var(--teal);
+        box-shadow: 0 0 0 4px rgba(15,118,110,.11);
+      }
+
+      .unit {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 650;
+        text-align: left;
+      }
+
+      .calc-section {
+        margin-top: 16px;
+        padding: 0 14px 14px;
+      }
+
+      .calc-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 12px 12px;
+        color: var(--teal-dark);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .calc-label::before { content: ''; width: 24px; height: 2px; background: var(--teal); border-radius: 4px; }
+
+      .calc-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 170px 76px;
+        gap: 12px;
+        align-items: center;
+        min-height: 67px;
+        padding: 10px 12px;
+        background: var(--surface-soft);
+        border-top: 1px solid var(--line);
+      }
+
+      .calc-row:first-of-type { border-radius: 14px 14px 0 0; }
+      .calc-row:last-child { border-radius: 0 0 14px 14px; }
+      .calc-row .field-title { color: #39585a; }
+      .calc-value {
+        height: 43px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 13px;
+        color: var(--teal-dark);
+        background: white;
+        border: 1px solid #cde2de;
+        border-radius: 11px;
+        font-size: 17px;
+        font-weight: 800;
+      }
+
+      .formula {
+        margin: 12px 12px 0;
+        padding: 11px 13px;
+        color: #6e625b;
+        background: var(--orange-soft);
+        border: 1px solid #f6ddc9;
+        border-radius: 11px;
+        font-size: 13px;
+      }
+
+      .formula strong { color: #a65c26; }
+
+      .summary {
+        position: sticky;
+        top: 20px;
+        padding: 26px;
+        color: white;
+        background:
+          radial-gradient(circle at 100% 0%, rgba(93, 194, 170, .28), transparent 42%),
+          linear-gradient(155deg, #103c3e 0%, #0b5d57 100%);
+        border: 0;
+      }
+
+      .summary .eyebrow { color: #9bded1; }
+      .summary h2 { max-width: 330px; margin-bottom: 22px; font-size: 23px; letter-spacing: -.03em; line-height: 1.15; }
+
+      .net-box {
+        padding: 21px;
+        background: rgba(255,255,255,.11);
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 18px;
+      }
+
+      .net-label { color: #b7ddd7; font-size: 14px; font-weight: 650; }
+      .net-amount { margin: 6px 0 4px; font-size: clamp(38px, 5vw, 53px); font-weight: 850; letter-spacing: -.06em; line-height: 1; }
+      .net-unit { color: #b7ddd7; font-size: 15px; }
+
+      .summary-list { margin: 23px 0 0; padding: 0; list-style: none; }
+      .summary-list li { display: flex; justify-content: space-between; gap: 14px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.13); color: #d9eeeb; font-size: 14px; }
+      .summary-list strong { color: white; font-weight: 750; }
+
+      .summary-foot { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-top: 20px; padding-top: 17px; border-top: 1px solid rgba(255,255,255,.15); color: #b7ddd7; font-size: 13px; }
+      .margin { color: #d7f5ec; font-weight: 800; }
+
+      .tip {
+        display: flex;
+        gap: 10px;
+        margin-top: 18px;
+        padding: 13px 14px;
+        color: #d7eeea;
+        background: rgba(0,0,0,.12);
+        border-radius: 12px;
+        font-size: 13px;
+      }
+      .tip-icon { flex: 0 0 auto; color: #f4be7d; font-weight: 900; }
+
+      footer { margin-top: 20px; padding: 0 4px; color: #718586; font-size: 13px; }
+
+      @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+        .summary { position: static; }
+      }
+
+      @media (max-width: 620px) {
+        .app-shell { padding: 20px 12px 32px; }
+        header { align-items: flex-start; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        .panel-top { padding: 21px 18px 15px; }
+        .fields { padding: 0 8px 8px; }
+        .field, .calc-row { grid-template-columns: minmax(0, 1fr) 128px 58px; gap: 8px; padding-left: 9px; padding-right: 9px; }
+        .field-note { font-size: 12px; }
+        .summary { padding: 22px 19px; }
+      }
+
+      @media (max-width: 430px) {
+        .field, .calc-row { grid-template-columns: minmax(0, 1fr) 112px; }
+        .unit { display: none; }
+        .field-note { white-space: normal; line-height: 1.2; }
+        .input-wrap input { font-size: 16px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <div class="app">
+        <header>
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 16.5h16M6 16.5l1.4-6h9.2l1.4 6M8 10.5l1.1-3h5.8l1.1 3M7 19h2m6 0h2" />
+              </svg>
+            </div>
+            <div>
+              <p class="eyebrow">Рабочий расчёт</p>
+              <h1>Расчёт недельных доходов и расходов по авто</h1>
+            </div>
+          </div>
+          <div class="week-chip"><span></span> Расчёт обновляется сразу</div>
+        </header>
+
+        <div class="layout">
+          <section class="panel" aria-labelledby="inputs-title">
+            <div class="panel-top">
+              <div>
+                <h2 id="inputs-title">Данные за неделю</h2>
+                <p>Введите свои значения — остальное посчитается автоматически.</p>
+              </div>
+              <div class="counter">4 + 2 поля</div>
+            </div>
+
+            <div class="fields">
+              <label class="field">
+                <span class="field-copy"><span class="field-title">Грубый доход</span><span class="field-note">Все поступления за неделю</span></span>
+                <span class="input-wrap"><input id="gross" type="number" inputmode="decimal" min="0" step="100" aria-label="Грубый доход" /></span>
+                <span class="unit">CZK</span>
+              </label>
+              <label class="field">
+                <span class="field-copy"><span class="field-title">Пробег</span><span class="field-note">Расстояние за неделю</span></span>
+                <span class="input-wrap"><input id="distance" type="number" inputmode="decimal" min="0" step="10" aria-label="Пробег" /></span>
+                <span class="unit">км</span>
+              </label>
+              <label class="field">
+                <span class="field-copy"><span class="field-title">Средний расход</span><span class="field-note">Расход топлива автомобиля</span></span>
+                <span class="input-wrap"><input id="consumption" type="number" inputmode="decimal" min="0" step="0.1" aria-label="Средний расход" /></span>
+                <span class="unit">л/100 км</span>
+              </label>
+              <label class="field">
+                <span class="field-copy"><span class="field-title">Цена топлива</span><span class="field-note">Стоимость одного литра</span></span>
+                <span class="input-wrap"><input id="fuelPrice" type="number" inputmode="decimal" min="0" step="0.1" aria-label="Цена топлива" /></span>
+                <span class="unit">CZK/литр</span>
+              </label>
+              <label class="field">
+                <span class="field-copy"><span class="field-title">Комиссия</span><span class="field-note">Комиссия сервиса за неделю</span></span>
+                <span class="input-wrap"><input id="commission" type="number" inputmode="decimal" min="0" step="100" aria-label="Комиссия" /></span>
+                <span class="unit">CZK</span>
+              </label>
+              <label class="field">
+                <span class="field-copy"><span class="field-title">Пронайм</span><span class="field-note">Аренда автомобиля за неделю</span></span>
+                <span class="input-wrap"><input id="rent" type="number" inputmode="decimal" min="0" step="100" aria-label="Пронайм" /></span>
+                <span class="unit">CZK</span>
+              </label>
+            </div>
+
+            <div class="calc-section" aria-labelledby="calculated-title">
+              <div class="calc-label" id="calculated-title">Рассчитывается автоматически</div>
+              <div class="calc-row">
+                <span class="field-copy"><span class="field-title">Стоимость топлива</span><span class="field-note">Пробег × расход ÷ 100 × цена</span></span>
+                <output class="calc-value" id="fuelCost">—</output>
+                <span class="unit">CZK</span>
+              </div>
+              <div class="calc-row">
+                <span class="field-copy"><span class="field-title">DPH</span><span class="field-note">Комиссия × 21%</span></span>
+                <output class="calc-value" id="tax">—</output>
+                <span class="unit">CZK</span>
+              </div>
+              <div class="calc-row">
+                <span class="field-copy"><span class="field-title">Чистый доход</span><span class="field-note">Грубый доход − расходы</span></span>
+                <output class="calc-value" id="netInline">—</output>
+                <span class="unit">CZK</span>
+              </div>
+              <div class="formula"><strong>Формула:</strong> чистый доход = грубый доход − (топливо + DPН + пронайм)</div>
+            </div>
+          </section>
+
+          <aside class="panel summary" aria-labelledby="summary-title">
+            <p class="eyebrow">Главный результат</p>
+            <h2 id="summary-title">Сколько останется за неделю</h2>
+            <div class="net-box">
+              <div class="net-label">Чистый доход</div>
+              <div class="net-amount" id="netAmount">—</div>
+              <div class="net-unit">CZK после основных расходов</div>
+            </div>
+            <ul class="summary-list">
+              <li><span>Грубый доход</span><strong id="grossSummary">— CZK</strong></li>
+              <li><span>Топливо</span><strong id="fuelSummary">— CZK</strong></li>
+              <li><span>DPH</span><strong id="taxSummary">— CZK</strong></li>
+              <li><span>Пронайм</span><strong id="rentSummary">— CZK</strong></li>
+            </ul>
+            <div class="summary-foot"><span>Доля чистого дохода</span><span class="margin" id="marginSummary">—</span></div>
+            <div class="tip"><span class="tip-icon">i</span><span>Измените любое поле слева, чтобы сразу увидеть новый результат.</span></div>
+          </aside>
+        </div>
+
+        <footer>Введите значения за одну неделю в CZK. Поля с расчётом защищены от ручного редактирования.</footer>
+      </div>
+    </main>
+
+    <script>
+      const ids = ['gross', 'distance', 'consumption', 'fuelPrice', 'commission', 'rent'];
+      const number = (id) => Math.max(0, Number.parseFloat(document.getElementById(id).value) || 0);
+      const money = (value) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(Math.round((value + Number.EPSILON) * 100) / 100);
+      const whole = (value) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(Math.round(value));
+
+      function update() {
+        const complete = ids.every((id) => document.getElementById(id).value.trim() !== '');
+        if (!complete) {
+          ['fuelCost', 'tax', 'netInline'].forEach((id) => document.getElementById(id).textContent = '—');
+          document.getElementById('netAmount').textContent = '—';
+          ['grossSummary', 'fuelSummary', 'taxSummary', 'rentSummary'].forEach((id) => document.getElementById(id).textContent = '— CZK');
+          document.getElementById('marginSummary').textContent = '—';
+          return;
+        }
+        const gross = number('gross');
+        const distance = number('distance');
+        const consumption = number('consumption');
+        const fuelPrice = number('fuelPrice');
+        const commission = number('commission');
+        const rent = number('rent');
+        const fuelCost = distance * consumption / 100 * fuelPrice;
+        const tax = commission * 0.21;
+        const net = gross - (fuelCost + tax + rent);
+        const margin = gross ? Math.max(0, net / gross * 100) : 0;
+
+        document.getElementById('fuelCost').textContent = money(fuelCost);
+        document.getElementById('tax').textContent = money(tax);
+        document.getElementById('netInline').textContent = money(net);
+        document.getElementById('netAmount').textContent = whole(net);
+        document.getElementById('grossSummary').textContent = `${money(gross)} CZK`;
+        document.getElementById('fuelSummary').textContent = `${money(fuelCost)} CZK`;
+        document.getElementById('taxSummary').textContent = `${money(tax)} CZK`;
+        document.getElementById('rentSummary').textContent = `${money(rent)} CZK`;
+        document.getElementById('marginSummary').textContent = `${money(margin)}%`;
+      }
+
+      ids.forEach((id) => document.getElementById(id).addEventListener('input', update));
+      update();
+    </script>
+  </body>
+</html>
