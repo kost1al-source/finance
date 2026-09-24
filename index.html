@@ -1161,10 +1161,11 @@
         }
 
         .calc-row {
-          grid-template-columns: minmax(0, 1fr) 124px;
-          gap: 10px;
-          padding: 6px 8px;
-          min-height: 48px;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 8px;
+          align-items: start;
+          padding: 9px 8px;
+          min-height: 0;
         }
 
         .calc-row .field-left { gap: 9px; }
@@ -1178,10 +1179,15 @@
         .calc-row .field-title { font-size: 13px; }
 
         .calc-value-wrap .calc-value {
-          height: 36px;
+          height: 40px;
           font-size: 15px;
           padding-left: 8px;
           padding-right: 44px;
+        }
+
+        .calc-row .calc-value-wrap {
+          width: 100%;
+          min-width: 0;
         }
 
         .summary {
