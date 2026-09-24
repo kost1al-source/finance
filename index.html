@@ -1,0 +1,1800 @@
+<!doctype html>
+<html lang="ru" data-theme="orange">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f5f7" />
+    <title>Расчёт недельных доходов по авто</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FF8C00'/%3E%3Cstop offset='100%25' stop-color='%23FF5000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='white' stroke-width='3.5'/%3E%3Cpath d='M32 14v36M14 32h36M19 19l26 26M19 45l26-26' stroke='white' stroke-width='2.2' stroke-linecap='round' opacity='0.85'/%3E%3Ccircle cx='32' cy='32' r='4' fill='white'/%3E%3C/svg%3E" />
+    <style>
+      :root {
+        /* Apple Typography System */
+        --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Helvetica Neue", Inter, Arial, sans-serif;
+        --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+        /* Common Apple Surface & Material Properties */
+        --surface: #ffffff;
+        --surface-glass: rgba(255, 255, 255, 0.84);
+        --surface-soft: rgba(0, 0, 0, 0.025);
+        --surface-hover: rgba(0, 0, 0, 0.04);
+        --line: rgba(0, 0, 0, 0.08);
+        --line-soft: rgba(0, 0, 0, 0.04);
+        --panel-background: rgba(255, 255, 255, 0.86);
+        --panel-border-subtle: rgba(0, 0, 0, 0.06);
+        --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 20px 45px -12px rgba(0, 0, 0, 0.06);
+
+        --input-background: rgba(0, 0, 0, 0.04);
+        --input-outline: rgba(0, 0, 0, 0.09);
+        --calc-heading: #1d1d1f;
+        --calc-value-background: #ffffff;
+
+        --modal-background: rgba(255, 255, 255, 0.94);
+        --modal-surface: rgba(0, 0, 0, 0.03);
+        --modal-outline: rgba(0, 0, 0, 0.08);
+        --modal-muted: #86868b;
+        --modal-shadow: 0 32px 80px -16px rgba(0, 0, 0, 0.22);
+        --choice-background: rgba(255, 255, 255, 0.7);
+        --choice-hover: rgba(255, 255, 255, 0.95);
+        --choice-outline: rgba(0, 0, 0, 0.07);
+
+        --summary-card-background: rgba(255, 255, 255, 0.07);
+        --summary-muted: rgba(255, 255, 255, 0.62);
+        --summary-copy: rgba(255, 255, 255, 0.92);
+        --summary-divider: rgba(255, 255, 255, 0.09);
+        --tip-background: rgba(255, 255, 255, 0.07);
+        --tip-copy: rgba(255, 255, 255, 0.84);
+
+        /* Default Theme: Апельсин (Apple Orange) */
+        --ink: #1d1d1f;
+        --ink-secondary: #515154;
+        --muted: #86868b;
+        --accent: #ff6b00;
+        --accent-hover: #ff7e1a;
+        --accent-active: #e65c00;
+        --accent-soft: rgba(255, 107, 0, 0.09);
+        --accent-glow: rgba(255, 107, 0, 0.22);
+        --accent-gradient: linear-gradient(135deg, #ff8214 0%, #ff5500 100%);
+        --page-background: #f5f5f7;
+        --shell-background:
+          radial-gradient(circle at 85% -10%, rgba(255, 140, 0, 0.12) 0%, transparent 45%),
+          radial-gradient(circle at 10% 25%, rgba(255, 107, 0, 0.07) 0%, transparent 40%),
+          #f5f5f7;
+        --input-focus-outline: #ff6b00;
+        --input-focus-shadow: 0 0 0 3.5px rgba(255, 107, 0, 0.2);
+        --calc-value-color: #ff6b00;
+        --summary-background:
+          radial-gradient(circle at 100% 0%, rgba(255, 122, 0, 0.28) 0%, transparent 55%),
+          radial-gradient(circle at 0% 100%, rgba(255, 80, 0, 0.15) 0%, transparent 50%),
+          linear-gradient(155deg, #1c1c1e 0%, #121214 100%);
+        --summary-accent: #ff9d47;
+        --choice-selected-background: #fff6ee;
+        --choice-selected-outline: #ff6b00;
+
+        color-scheme: light;
+      }
+
+      /* Theme 1: Апельсин (Apple Orange) */
+      html[data-theme="orange"],
+      html[data-theme="citrus"] {
+        --ink: #1d1d1f;
+        --ink-secondary: #515154;
+        --muted: #86868b;
+        --accent: #ff6b00;
+        --accent-hover: #ff7e1a;
+        --accent-active: #e65c00;
+        --accent-soft: rgba(255, 107, 0, 0.09);
+        --accent-glow: rgba(255, 107, 0, 0.22);
+        --accent-gradient: linear-gradient(135deg, #ff8214 0%, #ff5500 100%);
+        --page-background: #f5f5f7;
+        --shell-background:
+          radial-gradient(circle at 85% -10%, rgba(255, 140, 0, 0.12) 0%, transparent 45%),
+          radial-gradient(circle at 10% 25%, rgba(255, 107, 0, 0.07) 0%, transparent 40%),
+          #f5f5f7;
+        --input-focus-outline: #ff6b00;
+        --input-focus-shadow: 0 0 0 3.5px rgba(255, 107, 0, 0.2);
+        --calc-value-color: #ff6b00;
+        --summary-background:
+          radial-gradient(circle at 100% 0%, rgba(255, 122, 0, 0.28) 0%, transparent 55%),
+          radial-gradient(circle at 0% 100%, rgba(255, 80, 0, 0.15) 0%, transparent 50%),
+          linear-gradient(155deg, #1c1c1e 0%, #121214 100%);
+        --summary-accent: #ff9d47;
+        --choice-selected-background: #fff6ee;
+        --choice-selected-outline: #ff6b00;
+        color-scheme: light;
+      }
+
+      /* Theme 2: Океан (Apple Teal) */
+      html[data-theme="ocean"] {
+        --ink: #112a2e;
+        --ink-secondary: #4a676b;
+        --muted: #6f8c90;
+        --accent: #0f766e;
+        --accent-hover: #128a82;
+        --accent-active: #0b5d57;
+        --accent-soft: rgba(15, 118, 110, 0.09);
+        --accent-glow: rgba(15, 118, 110, 0.22);
+        --accent-gradient: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+        --page-background: #f3f8f7;
+        --shell-background:
+          radial-gradient(circle at 85% -10%, rgba(20, 184, 166, 0.12) 0%, transparent 45%),
+          radial-gradient(circle at 10% 25%, rgba(15, 118, 110, 0.07) 0%, transparent 40%),
+          #f3f8f7;
+        --input-focus-outline: #0f766e;
+        --input-focus-shadow: 0 0 0 3.5px rgba(15, 118, 110, 0.2);
+        --calc-value-color: #0f766e;
+        --summary-background:
+          radial-gradient(circle at 100% 0%, rgba(45, 212, 191, 0.28) 0%, transparent 55%),
+          radial-gradient(circle at 0% 100%, rgba(13, 148, 136, 0.2) 0%, transparent 50%),
+          linear-gradient(155deg, #103c3e 0%, #0b5d57 100%);
+        --summary-accent: #76d8c8;
+        --choice-selected-background: #e6f6f4;
+        --choice-selected-outline: #0f766e;
+        color-scheme: light;
+      }
+
+      /* Theme 3: Ночь (Apple Space Black) */
+      html[data-theme="night"] {
+        --ink: #f5f5f7;
+        --ink-secondary: #c7c7cc;
+        --muted: #8e8e93;
+        --surface: #1c1c1e;
+        --surface-glass: rgba(28, 28, 30, 0.78);
+        --surface-soft: rgba(255, 255, 255, 0.045);
+        --surface-hover: rgba(255, 255, 255, 0.08);
+        --line: rgba(255, 255, 255, 0.08);
+        --line-soft: rgba(255, 255, 255, 0.04);
+        --panel-background: rgba(24, 24, 27, 0.84);
+        --panel-border-subtle: rgba(255, 255, 255, 0.08);
+        --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.65), 0 20px 45px -12px rgba(0, 0, 0, 0.8);
+
+        --accent: #2dd4bf;
+        --accent-hover: #5eead4;
+        --accent-active: #14b8a6;
+        --accent-soft: rgba(45, 212, 191, 0.14);
+        --accent-glow: rgba(45, 212, 191, 0.3);
+        --accent-gradient: linear-gradient(135deg, #2dd4bf 0%, #0d9488 100%);
+        --page-background: #09090b;
+        --shell-background:
+          radial-gradient(circle at 85% -10%, rgba(45, 212, 191, 0.12) 0%, transparent 45%),
+          radial-gradient(circle at 10% 30%, rgba(15, 118, 110, 0.07) 0%, transparent 40%),
+          #09090b;
+        --input-background: rgba(255, 255, 255, 0.06);
+        --input-outline: rgba(255, 255, 255, 0.12);
+        --input-focus-outline: #2dd4bf;
+        --input-focus-shadow: 0 0 0 3.5px rgba(45, 212, 191, 0.28);
+        --calc-heading: #f5f5f7;
+        --calc-value-background: rgba(255, 255, 255, 0.06);
+        --calc-value-color: #5eead4;
+
+        --summary-background:
+          radial-gradient(circle at 100% 0%, rgba(45, 212, 191, 0.24) 0%, transparent 55%),
+          linear-gradient(155deg, #18181b 0%, #0d0d0f 100%);
+        --summary-accent: #5eead4;
+        --modal-background: rgba(24, 24, 27, 0.94);
+        --modal-surface: rgba(255, 255, 255, 0.05);
+        --modal-outline: rgba(255, 255, 255, 0.1);
+        --modal-muted: #8e8e93;
+        --modal-shadow: 0 32px 90px -16px rgba(0, 0, 0, 0.75);
+        --choice-background: rgba(255, 255, 255, 0.05);
+        --choice-hover: rgba(255, 255, 255, 0.09);
+        --choice-outline: rgba(255, 255, 255, 0.08);
+        --choice-selected-background: rgba(45, 212, 191, 0.16);
+        --choice-selected-outline: #2dd4bf;
+
+        color-scheme: dark;
+      }
+
+      /* Theme 4: Лаванда (Apple Lavender) */
+      html[data-theme="lavender"] {
+        --ink: #2b223d;
+        --ink-secondary: #5d5373;
+        --muted: #807798;
+        --accent: #7659b5;
+        --accent-hover: #886cc7;
+        --accent-active: #5f429e;
+        --accent-soft: rgba(118, 89, 181, 0.1);
+        --accent-glow: rgba(118, 89, 181, 0.22);
+        --accent-gradient: linear-gradient(135deg, #8f6ee0 0%, #6e48bc 100%);
+        --page-background: #f6f3fb;
+        --shell-background:
+          radial-gradient(circle at 85% -10%, rgba(147, 112, 219, 0.12) 0%, transparent 45%),
+          radial-gradient(circle at 10% 25%, rgba(118, 89, 181, 0.07) 0%, transparent 40%),
+          #f6f3fb;
+        --input-focus-outline: #7659b5;
+        --input-focus-shadow: 0 0 0 3.5px rgba(118, 89, 181, 0.2);
+        --calc-value-color: #7659b5;
+        --summary-background:
+          radial-gradient(circle at 100% 0%, rgba(167, 139, 250, 0.28) 0%, transparent 55%),
+          radial-gradient(circle at 0% 100%, rgba(118, 89, 181, 0.2) 0%, transparent 50%),
+          linear-gradient(155deg, #2f2347 0%, #1c142c 100%);
+        --summary-accent: #c4b5fd;
+        --choice-selected-background: #f1edfa;
+        --choice-selected-outline: #7659b5;
+        color-scheme: light;
+      }
+
+      /* Animations */
+      @keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes welcome-in { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes welcome-out { to { opacity: 0; transform: translateY(14px) scale(0.98); } }
+      @keyframes app-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes panel-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes field-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes pulse-subtle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.08); } }
+
+      /* Reset & Base */
+      *, *::before, *::after { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background: var(--page-background);
+        font-family: var(--font-sans);
+        font-size: 15px;
+        line-height: 1.47;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      button, input { font-family: inherit; }
+
+      .app-shell {
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: max(24px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+        background: var(--shell-background);
+        transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .app {
+        max-width: 1140px;
+        margin: 0 auto;
+      }
+
+      body:not(.has-entered) .app { visibility: hidden; }
+      body.has-entered .app { animation: app-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+      /* Apple Minimal Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 26px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        flex: 0 0 48px;
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        color: #ffffff;
+        background: var(--accent-gradient);
+        box-shadow: 0 10px 22px -6px var(--accent-glow), 0 2px 6px rgba(0, 0, 0, 0.06);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.35s ease;
+      }
+
+      .brand-mark:hover { transform: scale(1.04) rotate(-2deg); }
+      .brand-mark svg { width: 26px; height: 26px; }
+
+      .brand-meta {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 2px;
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(20px, 3vw, 30px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 13px;
+        color: var(--ink-secondary);
+        background: var(--surface-glass);
+        border: 1px solid var(--panel-border-subtle);
+        border-radius: 9999px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        white-space: nowrap;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #34c759;
+        box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.2);
+        animation: pulse-subtle 2.5s infinite ease-in-out;
+      }
+
+      .theme-btn-quick {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 13px;
+        color: var(--ink);
+        background: var(--surface-glass);
+        border: 1px solid var(--panel-border-subtle);
+        border-radius: 9999px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .theme-btn-quick:hover {
+        transform: translateY(-1px);
+        background: var(--surface);
+        border-color: var(--accent);
+      }
+
+      .theme-btn-quick svg {
+        width: 14px;
+        height: 14px;
+        color: var(--accent);
+      }
+
+      /* Apple Layout Grid */
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.85fr);
+        gap: 22px;
+        align-items: start;
+      }
+
+      /* Apple Frosted Glass Card */
+      .panel {
+        background: var(--panel-background);
+        border: 1px solid var(--panel-border-subtle);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        overflow: hidden;
+      }
+
+      body.has-entered .layout > .panel { animation: panel-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body.has-entered .layout > .summary { animation-delay: 0.1s; }
+
+      .panel-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 24px 26px 16px;
+      }
+
+      .panel-top > div:first-child { min-width: 0; }
+
+      .panel-top h2 {
+        margin: 0 0 3px;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+
+      .panel-top p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+
+      .counter {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 11px;
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        transition: color 0.3s ease, background 0.3s ease;
+      }
+
+      /* Form Fields */
+      .fields {
+        padding: 0 14px 14px;
+      }
+
+      /* Apple 2-Column Row (Info on Left, Integrated Input on Right) */
+      .field {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 150px;
+        gap: 14px;
+        align-items: center;
+        min-height: 64px;
+        padding: 8px 12px;
+        border-radius: 15px;
+        transition: background 0.2s ease;
+      }
+
+      .field:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 54px;
+        right: 12px;
+        height: 1px;
+        background: var(--line-soft);
+      }
+
+      .field:hover { background: var(--surface-soft); }
+
+      body.has-entered .field { animation: field-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body.has-entered .field:nth-child(1) { animation-delay: 0.05s; }
+      body.has-entered .field:nth-child(2) { animation-delay: 0.10s; }
+      body.has-entered .field:nth-child(3) { animation-delay: 0.15s; }
+      body.has-entered .field:nth-child(4) { animation-delay: 0.20s; }
+      body.has-entered .field:nth-child(5) { animation-delay: 0.25s; }
+      body.has-entered .field:nth-child(6) { animation-delay: 0.30s; }
+
+      .field-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .field-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        color: var(--accent);
+        background: var(--accent-soft);
+        transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+      }
+
+      .field:hover .field-icon { transform: scale(1.05); }
+      .field-icon svg { width: 19px; height: 19px; }
+
+      .field-copy {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .field-title {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 14.5px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+      }
+
+      .field-note {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+      }
+
+      /* Apple Integrated Input with Embedded Unit */
+      .input-wrap, .calc-value-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        width: 100%;
+      }
+
+      .input-wrap input {
+        width: 100%;
+        box-sizing: border-box;
+        height: 44px;
+        padding-left: 10px;
+        padding-right: 48px; /* space for standard unit tag */
+        color: var(--ink);
+        background: var(--input-background);
+        border: 1px solid var(--input-outline);
+        border-radius: 12px;
+        outline: none;
+        text-align: right;
+        font-size: 16px; /* 16px is required to avoid iOS Safari zoom */
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        -webkit-appearance: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .input-wrap.unit-mid input { padding-right: 64px; }
+      .input-wrap.unit-wide input { padding-right: 76px; }
+
+      .input-wrap input:hover { border-color: rgba(0, 0, 0, 0.16); }
+      html[data-theme="night"] .input-wrap input:hover { border-color: rgba(255, 255, 255, 0.22); }
+
+      .input-wrap input:focus {
+        background: var(--surface);
+        border-color: var(--input-focus-outline);
+        box-shadow: var(--input-focus-shadow);
+      }
+
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type=number] { -moz-appearance: textfield; }
+
+      .unit-tag {
+        position: absolute;
+        right: 11px;
+        pointer-events: none;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        user-select: none;
+      }
+
+      /* Calculated Section */
+      .calc-section {
+        margin: 10px 14px 16px;
+        padding: 6px;
+        background: var(--surface-soft);
+        border: 1px solid var(--panel-border-subtle);
+        border-radius: 18px;
+      }
+
+      .calc-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px 7px;
+        color: var(--accent);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+      }
+
+      .calc-header svg { width: 14px; height: 14px; }
+
+      .calc-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .calc-row {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 150px;
+        gap: 14px;
+        align-items: center;
+        min-height: 52px;
+        padding: 7px 12px;
+        background: var(--surface);
+        border-radius: 11px;
+        border: 1px solid var(--line-soft);
+      }
+
+      .calc-row .field-left { gap: 10px; }
+      .calc-row .field-icon {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.03);
+        color: var(--ink-secondary);
+      }
+
+      html[data-theme="night"] .calc-row .field-icon { background: rgba(255, 255, 255, 0.06); }
+      .calc-row .field-icon svg { width: 16px; height: 16px; }
+      .calc-row .field-title { font-size: 13.5px; font-weight: 600; color: var(--calc-heading); }
+
+      .calc-value-wrap .calc-value {
+        width: 100%;
+        box-sizing: border-box;
+        height: 38px;
+        padding-left: 10px;
+        padding-right: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        color: var(--calc-value-color);
+        background: var(--calc-value-background);
+        border: 1px solid var(--line-soft);
+        border-radius: 10px;
+        font-size: 15.5px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.3s ease;
+      }
+
+      /* Apple Summary Card (Right Column) */
+      .summary {
+        position: sticky;
+        top: 24px;
+        padding: 26px;
+        color: #ffffff;
+        background: var(--summary-background);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.35);
+        transition: background 0.4s ease;
+      }
+
+      .summary .eyebrow { color: var(--summary-accent); }
+      .summary h2 {
+        margin: 0 0 18px;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+      }
+
+      .net-box {
+        position: relative;
+        padding: 22px 20px;
+        background: var(--summary-card-background);
+        border: 1px solid var(--summary-divider);
+        border-radius: 18px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .net-box::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 130px;
+        height: 130px;
+        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      .net-label {
+        color: var(--summary-muted);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+
+      .net-amount {
+        margin: 6px 0 3px;
+        font-size: clamp(34px, 4.4vw, 50px);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+        color: #ffffff;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+
+      .net-unit {
+        color: var(--summary-muted);
+        font-size: 13px;
+      }
+
+      .summary-list {
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .summary-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 0;
+        border-top: 1px solid var(--summary-divider);
+        color: var(--summary-copy);
+        font-size: 13.5px;
+      }
+
+      .summary-list li > span:first-child,
+      .summary-list strong,
+      .summary-foot > span:first-child,
+      .tip > span { min-width: 0; }
+
+      .summary-list strong { white-space: nowrap; }
+
+      .summary-list span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .summary-list span svg {
+        width: 15px;
+        height: 15px;
+        color: var(--summary-accent);
+        opacity: 0.85;
+      }
+
+      .summary-list strong {
+        color: #ffffff;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .summary-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--summary-divider);
+        color: var(--summary-muted);
+        font-size: 12.5px;
+        font-weight: 600;
+      }
+
+      .margin-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 9px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        color: var(--summary-accent);
+        font-size: 12.5px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 18px;
+        padding: 12px 14px;
+        color: var(--tip-copy);
+        background: var(--tip-background);
+        border: 1px solid var(--summary-divider);
+        border-radius: 13px;
+        font-size: 12.5px;
+        line-height: 1.4;
+      }
+
+      .tip-icon {
+        flex: 0 0 17px;
+        width: 17px;
+        height: 17px;
+        margin-top: 1px;
+        color: var(--summary-accent);
+      }
+
+      /* Apple Minimal Footer */
+      footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 24px;
+        padding: 0 6px;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      .theme-again {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 auto;
+        padding: 8px 14px;
+        color: var(--ink);
+        background: var(--surface-glass);
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        cursor: pointer;
+        font-size: 12.5px;
+        font-weight: 600;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .theme-again:hover {
+        transform: translateY(-1px);
+        background: var(--surface);
+        border-color: var(--accent);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .theme-again svg { width: 14px; height: 14px; color: var(--accent); }
+
+      /* Modal Dialog (Apple Sheet / Overlay) */
+      .welcome-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        display: grid;
+        place-items: center;
+        overflow-y: auto;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        animation: overlay-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .welcome-overlay[hidden] { display: none; }
+      .welcome-overlay.is-closing { animation: welcome-out 0.28s ease both; pointer-events: none; }
+
+      .welcome-dialog {
+        position: relative;
+        width: min(100%, 600px);
+        padding: clamp(24px, 5vw, 38px);
+        color: var(--ink);
+        background: var(--modal-background);
+        border: 1px solid var(--modal-outline);
+        border-radius: 26px;
+        box-shadow: var(--modal-shadow);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+        animation: welcome-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        overflow: hidden;
+      }
+
+      .welcome-dialog::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+        pointer-events: none;
+      }
+
+      .welcome-mark {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 20px;
+        border-radius: 16px;
+        color: #ffffff;
+        background: var(--accent-gradient);
+        box-shadow: 0 10px 22px -4px var(--accent-glow);
+        transition: background 0.35s ease, box-shadow 0.35s ease;
+      }
+
+      .welcome-mark svg { width: 28px; height: 28px; }
+
+      .welcome-kicker {
+        margin: 0 0 5px;
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+      }
+
+      .welcome-title {
+        margin: 0 0 7px;
+        font-size: clamp(24px, 4vw, 32px);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.12;
+      }
+
+      .welcome-copy {
+        margin: 0 0 22px;
+        color: var(--modal-muted);
+        font-size: 14px;
+      }
+
+      /* Apple 4-Theme Grid */
+      .theme-options {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 9px;
+      }
+
+      .theme-option {
+        position: relative;
+        padding: 11px 9px;
+        color: var(--ink);
+        background: var(--choice-background);
+        border: 1.5px solid var(--choice-outline);
+        border-radius: 15px;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .theme-option:hover { transform: translateY(-2px); background: var(--choice-hover); }
+      .theme-option[aria-pressed="true"] {
+        background: var(--choice-selected-background);
+        border-color: var(--choice-selected-outline);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+      }
+
+      .theme-colors {
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 38px;
+        margin-bottom: 9px;
+        padding: 5px;
+        background: var(--modal-surface);
+        border: 1px solid var(--modal-outline);
+        border-radius: 9px;
+      }
+
+      .theme-colors i { display: block; width: 30%; height: 15px; border-radius: 4px; }
+      .theme-colors i:nth-child(2) { height: 23px; }
+
+      .theme-colors-orange i:nth-child(1) { background: #ffe4cc; }
+      .theme-colors-orange i:nth-child(2) { background: #ff6b00; }
+      .theme-colors-orange i:nth-child(3) { background: #1d1d1f; }
+
+      .theme-colors-ocean i:nth-child(1) { background: #d9efeb; }
+      .theme-colors-ocean i:nth-child(2) { background: #0f766e; }
+      .theme-colors-ocean i:nth-child(3) { background: #112a2e; }
+
+      .theme-colors-night i:nth-child(1) { background: #09090b; }
+      .theme-colors-night i:nth-child(2) { background: #27272a; }
+      .theme-colors-night i:nth-child(3) { background: #2dd4bf; }
+
+      .theme-colors-lavender i:nth-child(1) { background: #eee8fa; }
+      .theme-colors-lavender i:nth-child(2) { background: #7659b5; }
+      .theme-colors-lavender i:nth-child(3) { background: #2b223d; }
+
+      .theme-option-name {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .theme-option-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 15px;
+        width: 15px;
+        height: 15px;
+      }
+
+      .theme-option-icon svg { width: 14px; height: 14px; }
+
+      .theme-option-description {
+        display: block;
+        margin-top: 2px;
+        color: var(--modal-muted);
+        font-size: 11px;
+      }
+
+      .welcome-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 24px;
+      }
+
+      .welcome-hint { margin: 0; color: var(--modal-muted); font-size: 12.5px; }
+
+      .continue-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-width: 160px;
+        height: 46px;
+        padding: 0 22px;
+        color: #ffffff;
+        background: var(--accent-gradient);
+        border: none;
+        border-radius: 9999px;
+        cursor: pointer;
+        font-size: 14.5px;
+        font-weight: 700;
+        box-shadow: 0 10px 22px -4px var(--accent-glow);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, filter 0.2s ease;
+      }
+
+      .continue-button:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -4px var(--accent-glow); filter: brightness(1.04); }
+      .continue-button:active { transform: scale(0.97); }
+
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+      /* Mobile & Tablet Responsiveness (Precision Apple Tuning) */
+      @media (max-width: 960px) {
+        .layout { grid-template-columns: 1fr; }
+        .summary { position: static; margin-top: 8px; }
+        .theme-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 640px) {
+        .app-shell {
+          padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+        }
+
+        header {
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+
+        .brand-mark {
+          width: 42px;
+          height: 42px;
+          border-radius: 12px;
+          flex: 0 0 42px;
+        }
+
+        .brand-mark svg { width: 22px; height: 22px; }
+        h1 { font-size: 19px; }
+        .status-pill { display: none; }
+
+        .panel {
+          border-radius: 20px;
+        }
+
+        .panel-top {
+          padding: 18px 16px 12px;
+        }
+
+        .panel-top h2 { font-size: 18px; }
+        .panel-top p { font-size: 13px; }
+
+        .fields {
+          padding: 0 8px 10px;
+        }
+
+        /* 2-column on mobile: left column gets ~65% width, input gets ~35% */
+        .field {
+          grid-template-columns: minmax(0, 1fr) 124px;
+          gap: 10px;
+          padding: 9px 8px;
+          min-height: 58px;
+        }
+
+        .field:not(:last-child)::after {
+          left: 48px;
+          right: 8px;
+        }
+
+        .field-left { gap: 10px; }
+        .field-icon {
+          width: 32px;
+          height: 32px;
+          flex: 0 0 32px;
+          border-radius: 9px;
+        }
+        .field-icon svg { width: 17px; height: 17px; }
+
+        .field-title {
+          font-size: 13.5px;
+          line-height: 1.25;
+          margin-bottom: 1px;
+        }
+
+        .field-note {
+          font-size: 11px;
+          line-height: 1.2;
+          color: var(--muted);
+          white-space: normal;
+        }
+
+        .input-wrap input {
+          height: 42px;
+          font-size: 16px !important; /* Prevents iOS auto-zoom */
+          padding-left: 8px;
+          padding-right: 44px;
+        }
+
+        .input-wrap.unit-mid input { padding-right: 58px; }
+        .input-wrap.unit-wide input { padding-right: 68px; }
+
+        .unit-tag {
+          right: 8px;
+          font-size: 11.5px;
+        }
+
+        .calc-section {
+          margin: 8px 8px 12px;
+          padding: 5px;
+          border-radius: 15px;
+        }
+
+        .calc-row {
+          grid-template-columns: minmax(0, 1fr) 124px;
+          gap: 10px;
+          padding: 6px 8px;
+          min-height: 48px;
+        }
+
+        .calc-row .field-left { gap: 9px; }
+        .calc-row .field-icon {
+          width: 28px;
+          height: 28px;
+          flex: 0 0 28px;
+          border-radius: 7px;
+        }
+        .calc-row .field-icon svg { width: 15px; height: 15px; }
+        .calc-row .field-title { font-size: 13px; }
+
+        .calc-value-wrap .calc-value {
+          height: 36px;
+          font-size: 15px;
+          padding-left: 8px;
+          padding-right: 44px;
+        }
+
+        .summary {
+          padding: 20px 16px;
+          border-radius: 20px;
+        }
+
+        .net-box {
+          padding: 18px 16px;
+          border-radius: 16px;
+        }
+
+        .net-amount {
+          font-size: 36px;
+        }
+
+        .theme-options {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        .welcome-dialog {
+          padding: 22px 18px;
+        }
+
+        .welcome-actions {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+        }
+
+        .continue-button { width: 100%; }
+        footer {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+      }
+
+      /* Extra-small phones: keep copy readable instead of squeezing it beside the input. */
+      @media (max-width: 380px) {
+        .field {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 8px;
+          align-items: start;
+          min-height: 0;
+          padding-block: 10px;
+        }
+
+        .field-left { width: 100%; }
+        .field-copy { flex: 1 1 auto; width: auto; }
+
+        .input-wrap { width: 100%; }
+
+        .calc-row {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 6px;
+          align-items: start;
+        }
+
+        .calc-row .calc-value-wrap {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .panel-top { gap: 10px; }
+        .panel-top p { max-width: 21em; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Theme Chooser Modal (Apple Sheet Style) -->
+    <div class="welcome-overlay" id="themeOverlay">
+      <section class="welcome-dialog" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" aria-describedby="welcomeCopy">
+        <div class="welcome-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3v18M3 12h18M6.5 6.5l11 11M6.5 17.5l11-11"/>
+          </svg>
+        </div>
+        <p class="welcome-kicker">Оформление калькулятора</p>
+        <h1 class="welcome-title" id="welcomeTitle">Выберите тему</h1>
+        <p class="welcome-copy" id="welcomeCopy">Настройте внешний вид калькулятора. Вы всегда можете переключить тему в любое время.</p>
+        
+        <div class="theme-options" role="group" aria-label="Темы оформления">
+          <!-- Option 1: Orange -->
+          <button class="theme-option" type="button" data-theme-choice="orange" aria-pressed="true" aria-label="Апельсин, сочная оранжевая тема в стиле Apple">
+            <span class="theme-colors theme-colors-orange" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="theme-option-name">
+              <span class="theme-option-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ff6b00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 3v18M3 12h18M6.5 6.5l11 11M6.5 17.5l11-11"/>
+                </svg>
+              </span>
+              <span>Апельсин</span>
+            </span>
+            <span class="theme-option-description">Оранжевая</span>
+          </button>
+
+          <!-- Option 2: Ocean -->
+          <button class="theme-option" type="button" data-theme-choice="ocean" aria-pressed="false" aria-label="Океан, светлая бирюзовая тема">
+            <span class="theme-colors theme-colors-ocean" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="theme-option-name">
+              <span class="theme-option-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 6c3 0 4 2 7 2s4-2 7-2 4 2 6 2"/>
+                  <path d="M2 12c3 0 4 2 7 2s4-2 7-2 4 2 6 2"/>
+                  <path d="M2 18c3 0 4 2 7 2s4-2 7-2 4 2 6 2"/>
+                </svg>
+              </span>
+              <span>Океан</span>
+            </span>
+            <span class="theme-option-description">Бирюзовая</span>
+          </button>
+
+          <!-- Option 3: Night -->
+          <button class="theme-option" type="button" data-theme-choice="night" aria-pressed="false" aria-label="Ночь, тёмная тема в стиле Apple">
+            <span class="theme-colors theme-colors-night" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="theme-option-name">
+              <span class="theme-option-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+              </span>
+              <span>Ночь</span>
+            </span>
+            <span class="theme-option-description">Тёмная</span>
+          </button>
+
+          <!-- Option 4: Lavender -->
+          <button class="theme-option" type="button" data-theme-choice="lavender" aria-pressed="false" aria-label="Лаванда, фиолетовая тема">
+            <span class="theme-colors theme-colors-lavender" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="theme-option-name">
+              <span class="theme-option-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#7659b5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/>
+                  <path d="M12 14v8M8.5 17c2 .5 3.5 2 3.5 2M15.5 16c-2 .5-3.5 2-3.5 2"/>
+                </svg>
+              </span>
+              <span>Лаванда</span>
+            </span>
+            <span class="theme-option-description">Лавандовая</span>
+          </button>
+        </div>
+
+        <div class="welcome-actions">
+          <p class="welcome-hint">Выбранная тема сохранится для следующего посещения.</p>
+          <button class="continue-button" type="button" id="themeContinue">
+            <span>Открыть расчёт</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Main Application Shell -->
+    <main class="app-shell">
+      <div class="app">
+        <!-- Minimal Apple Navigation Bar -->
+        <header>
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 3v18M3 12h18M6.5 6.5l11 11M6.5 17.5l11-11"/>
+                <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="brand-meta">
+              <p class="eyebrow">Apple Design</p>
+              <h1>Расчёт недельных доходов</h1>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <div class="status-pill">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span>Авторасчёт активен</span>
+            </div>
+            <button class="theme-btn-quick" type="button" id="headerChangeTheme" aria-label="Сменить тему оформления">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+              </svg>
+              <span>Тема</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Layout (2-Column Apple Control Center) -->
+        <div class="layout">
+          <!-- Left Column: Input Fields and Calculation Details -->
+          <section class="panel" aria-labelledby="inputs-title">
+            <div class="panel-top">
+              <div>
+                <h2 id="inputs-title">Данные за неделю</h2>
+                <p>Введите показатели авто — баланс пересчитывается автоматически</p>
+              </div>
+              <div class="counter">4 + 2 параметра</div>
+            </div>
+
+            <!-- Inputs List -->
+            <div class="fields">
+              <!-- Field 1: Gross Income -->
+              <label class="field">
+                <div class="field-left">
+                  <span class="field-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="6" width="20" height="12" rx="3"/>
+                      <circle cx="12" cy="12" r="2.5"/>
+                      <path d="M6 12h.01M18 12h.01"/>
+                    </svg>
+                  </span>
+                  <span class="field-copy">
+                    <span class="field-title">Доход</span>
+                    <span class="field-note">Выручка за неделю</span>
+                  </span>
+                </div>
+                <div class="input-wrap">
+                  <input id="gross" type="number" inputmode="decimal" min="0" step="100" placeholder="0" aria-label="Доход в CZK" />
+                  <span class="unit-tag">CZK</span>
+                </div>
+              </label>
+
+              <!-- Field 2: Distance -->
+              <label class="field">
+                <div class="field-left">
+                  <span class="field-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="9"/>
+                      <path d="m16 8-4.5 4.5"/>
+                      <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <span class="field-copy">
+                    <span class="field-title">Пробег</span>
+                    <span class="field-note">Километраж за 7 дней</span>
+                  </span>
+                </div>
+                <div class="input-wrap">
+                  <input id="distance" type="number" inputmode="decimal" min="0" step="10" placeholder="0" aria-label="Пробег в километрах" />
+                  <span class="unit-tag">км</span>
+                </div>
+              </label>
+
+              <!-- Field 3: Consumption -->
+              <label class="field">
+                <div class="field-left">
+                  <span class="field-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                    </svg>
+                  </span>
+                  <span class="field-copy">
+                    <span class="field-title">Средний расход</span>
+                    <span class="field-note">По бортовому компьютеру</span>
+                  </span>
+                </div>
+                <div class="input-wrap unit-wide">
+                  <input id="consumption" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0.0" aria-label="Средний расход на 100 км" />
+                  <span class="unit-tag">л/100км</span>
+                </div>
+              </label>
+
+              <!-- Field 4: Fuel Price -->
+              <label class="field">
+                <div class="field-left">
+                  <span class="field-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18"/>
+                      <path d="M15 10h2a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V8l-3-3"/>
+                      <path d="M6 12h6"/>
+                    </svg>
+                  </span>
+                  <span class="field-copy">
+                    <span class="field-title">Цена топлива</span>
+                    <span class="field-note">За 1 литр на АЗС</span>
+                  </span>
+                </div>
+                <div class="input-wrap unit-mid">
+                  <input id="fuelPrice" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0.0" aria-label="Цена топлива за литр" />
+                  <span class="unit-tag">CZK/л</span>
+                </div>
+              </label>
+
+              <!-- Field 5: Service Commission -->
+              <label class="field">
+                <div class="field-left">
+                  <span class="field-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                  </span>
+                  <span class="field-copy">
+                    <span class="field-title">Комиссия Bolt</span>
+                    <span class="field-note">Удержания сервиса</span>
+                  </span>
+                </div>
+                <div class="input-wrap">
+                  <input id="commission" type="number" inputmode="decimal" min="0" step="100" placeholder="0" aria-label="Комиссия сервиса Bolt" />
+                  <span class="unit-tag">CZK</span>
+                </div>
+              </label>
+
+              <!-- Field 6: Car Rental -->
+              <label class="field">
+                <div class="field-left">
+                  <span class="field-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.8 2 11 2 11.2V16c0 .6.4 1 1 1h2"/>
+                      <circle cx="7" cy="17" r="2"/>
+                      <circle cx="17" cy="17" r="2"/>
+                    </svg>
+                  </span>
+                  <span class="field-copy">
+                    <span class="field-title">Аренда авто</span>
+                    <span class="field-note">Ставка за 7 дней</span>
+                  </span>
+                </div>
+                <div class="input-wrap">
+                  <input id="rent" type="number" inputmode="decimal" min="0" step="100" placeholder="0" aria-label="Аренда авто за неделю" />
+                  <span class="unit-tag">CZK</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Auto-Calculated Details (Apple Grouped Box) -->
+            <div class="calc-section" aria-labelledby="calculated-title">
+              <div class="calc-header" id="calculated-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                  <polyline points="17 6 23 6 23 12"/>
+                </svg>
+                <span>Автоматический расчёт расходов</span>
+              </div>
+              <div class="calc-rows">
+                <div class="calc-row">
+                  <div class="field-left">
+                    <span class="field-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                      </svg>
+                    </span>
+                    <span class="field-copy">
+                      <span class="field-title">Стоимость топлива</span>
+                      <span class="field-note">Пробег × Расход × Цена топлива</span>
+                    </span>
+                  </div>
+                  <div class="calc-value-wrap">
+                    <output class="calc-value" id="fuelCost">—</output>
+                    <span class="unit-tag">CZK</span>
+                  </div>
+                </div>
+
+                <div class="calc-row">
+                  <div class="field-left">
+                    <span class="field-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
+                      </svg>
+                    </span>
+                    <span class="field-copy">
+                      <span class="field-title">DPH (НДС)</span>
+                      <span class="field-note">Комиссия Bolt × 21%</span>
+                    </span>
+                  </div>
+                  <div class="calc-value-wrap">
+                    <output class="calc-value" id="tax">—</output>
+                    <span class="unit-tag">CZK</span>
+                  </div>
+                </div>
+
+                <div class="calc-row">
+                  <div class="field-left">
+                    <span class="field-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                      </svg>
+                    </span>
+                    <span class="field-copy">
+                      <span class="field-title">Чистый доход</span>
+                      <span class="field-note">Доход − Топливо − DPH − Аренда</span>
+                    </span>
+                  </div>
+                  <div class="calc-value-wrap">
+                    <output class="calc-value" id="netInline">—</output>
+                    <span class="unit-tag">CZK</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Right Column: Apple Hero Result Card (Sticky Widget) -->
+          <aside class="panel summary" aria-labelledby="summary-title">
+            <p class="eyebrow">Главный результат</p>
+            <h2 id="summary-title">Сколько останется за неделю</h2>
+
+            <div class="net-box">
+              <div class="net-label">Чистый доход</div>
+              <div class="net-amount" id="netAmount">—</div>
+              <div class="net-unit">CZK после основных расходов</div>
+            </div>
+
+            <ul class="summary-list">
+              <li>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="2" y="6" width="20" height="12" rx="3"/>
+                  </svg>
+                  <span>Доход</span>
+                </span>
+                <strong id="grossSummary">— CZK</strong>
+              </li>
+              <li>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                  </svg>
+                  <span>Топливо</span>
+                </span>
+                <strong id="fuelSummary">— CZK</strong>
+              </li>
+              <li>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  </svg>
+                  <span>DPH</span>
+                </span>
+                <strong id="taxSummary">— CZK</strong>
+              </li>
+              <li>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.8 2 11 2 11.2V16c0 .6.4 1 1 1h2"/>
+                  </svg>
+                  <span>Аренда авто</span>
+                </span>
+                <strong id="rentSummary">— CZK</strong>
+              </li>
+            </ul>
+
+            <div class="summary-foot">
+              <span>Доля чистого дохода</span>
+              <span class="margin-badge" id="marginSummary">—</span>
+            </div>
+
+            <div class="tip">
+              <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              <span>Измените любое поле слева, чтобы сразу увидеть новый результат.</span>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Apple Minimal Footer -->
+        <footer>
+          <span>Введите значения за одну неделю в CZK. Расчётные поля заполняются автоматически.</span>
+          <button class="theme-again" type="button" id="changeTheme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <span>Изменить тему</span>
+          </button>
+        </footer>
+      </div>
+    </main>
+
+    <!-- App Logic & Theme State -->
+    <script>
+      const ids = ['gross', 'distance', 'consumption', 'fuelPrice', 'commission', 'rent'];
+      const number = (id) => Math.max(0, Number.parseFloat(document.getElementById(id).value) || 0);
+      const money = (value) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(Math.round((value + Number.EPSILON) * 100) / 100);
+      const whole = (value) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(Math.round(value));
+
+      function update() {
+        const complete = ids.every((id) => document.getElementById(id).value.trim() !== '');
+        if (!complete) {
+          ['fuelCost', 'tax', 'netInline'].forEach((id) => document.getElementById(id).textContent = '—');
+          document.getElementById('netAmount').textContent = '—';
+          ['grossSummary', 'fuelSummary', 'taxSummary', 'rentSummary'].forEach((id) => document.getElementById(id).textContent = '— CZK');
+          document.getElementById('marginSummary').textContent = '—';
+          return;
+        }
+
+        const gross = number('gross');
+        const distance = number('distance');
+        const consumption = number('consumption');
+        const fuelPrice = number('fuelPrice');
+        const commission = number('commission');
+        const rent = number('rent');
+
+        const fuelCost = (distance * consumption / 100) * fuelPrice;
+        const tax = commission * 0.21;
+        const net = gross - (fuelCost + tax + rent);
+        const margin = gross ? Math.max(0, (net / gross) * 100) : 0;
+
+        document.getElementById('fuelCost').textContent = money(fuelCost);
+        document.getElementById('tax').textContent = money(tax);
+        document.getElementById('netInline').textContent = money(net);
+        document.getElementById('netAmount').textContent = whole(net);
+        document.getElementById('grossSummary').textContent = `${money(gross)} CZK`;
+        document.getElementById('fuelSummary').textContent = `${money(fuelCost)} CZK`;
+        document.getElementById('taxSummary').textContent = `${money(tax)} CZK`;
+        document.getElementById('rentSummary').textContent = `${money(rent)} CZK`;
+        document.getElementById('marginSummary').textContent = `${money(margin)}%`;
+      }
+
+      ids.forEach((id) => document.getElementById(id).addEventListener('input', update));
+      update();
+
+      // Theme Management (Supports: orange, ocean, night, lavender)
+      const availableThemes = ['orange', 'ocean', 'night', 'lavender'];
+      const themeOverlay = document.getElementById('themeOverlay');
+      const themeChoices = Array.from(document.querySelectorAll('[data-theme-choice]'));
+      let activeTheme = 'orange';
+
+      try {
+        const savedTheme = localStorage.getItem('weekly-car-calculator-theme');
+        if (savedTheme === 'citrus') {
+          activeTheme = 'orange';
+        } else if (availableThemes.includes(savedTheme)) {
+          activeTheme = savedTheme;
+        }
+      } catch (_) {}
+
+      function applyTheme(theme) {
+        if (!availableThemes.includes(theme)) return;
+        activeTheme = theme;
+        document.documentElement.dataset.theme = theme;
+
+        // Subtle status bar tint matching page background on iOS/Android
+        const themeColors = {
+          orange: '#f5f5f7',
+          ocean: '#f3f8f7',
+          night: '#09090b',
+          lavender: '#f6f3fb',
+        };
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', themeColors[theme] || '#f5f5f7');
+        }
+
+        themeChoices.forEach((choice) => {
+          choice.setAttribute('aria-pressed', String(choice.dataset.themeChoice === theme));
+        });
+      }
+
+      function closeThemeChooser() {
+        try { localStorage.setItem('weekly-car-calculator-theme', activeTheme); } catch (_) {}
+        themeOverlay.classList.add('is-closing');
+        document.body.classList.add('has-entered');
+        window.setTimeout(() => {
+          themeOverlay.hidden = true;
+          document.getElementById('gross').focus({ preventScroll: true });
+        }, 300);
+      }
+
+      function openThemeChooser() {
+        themeOverlay.hidden = false;
+        themeOverlay.classList.remove('is-closing');
+        document.getElementById('themeContinue').focus();
+      }
+
+      applyTheme(activeTheme);
+
+      themeChoices.forEach((choice) => {
+        choice.addEventListener('click', () => applyTheme(choice.dataset.themeChoice));
+      });
+
+      document.getElementById('themeContinue').addEventListener('click', closeThemeChooser);
+      document.getElementById('changeTheme').addEventListener('click', openThemeChooser);
+      const headerChangeTheme = document.getElementById('headerChangeTheme');
+      if (headerChangeTheme) {
+        headerChangeTheme.addEventListener('click', openThemeChooser);
+      }
+
+      themeOverlay.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeThemeChooser();
+        }
+        if (event.key !== 'Tab') return;
+        const focusable = Array.from(themeOverlay.querySelectorAll('button:not([disabled])'));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+    </script>
+  </body>
+</html>
